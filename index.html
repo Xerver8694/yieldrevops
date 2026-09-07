@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yield | Fixing What Costs You</title>
+    <meta name="description" content="We build automated lead capture, reputation management, and local search infrastructure for your trade business so you never miss another customer.">
+    
+    <style>
+        :root {
+            --bg-dark: #071510;
+            --bg-forest: #0d261c;
+            --bg-card: #123326;
+            --bg-card-hover: #184232;
+            --lime: #2ee575;
+            --lime-hover: #26c463;
+            --lime-glow: rgba(46, 229, 117, 0.2);
+            --text-main: #f0fdf4;
+            --text-muted: #9bbbb0;
+            --border-color: rgba(46, 229, 117, 0.18);
+            --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1160px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        nav {
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border-color);
+            background-color: rgba(7, 21, 16, 0.85);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--text-main);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .logo svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .btn-sm {
+            padding: 10px 18px;
+            font-size: 0.9rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            color: var(--lime);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--lime);
+            color: #071510;
+            font-weight: 700;
+            padding: 14px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 18px var(--lime-glow);
+            text-align: center;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: var(--lime-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(46, 229, 117, 0.35);
+        }
+
+        .hero {
+            padding: 90px 0 70px;
+            text-align: center;
+            background: radial-gradient(circle at 50% 10%, rgba(13, 38, 28, 0.9) 0%, var(--bg-dark) 70%);
+        }
+
+        .hero h1 {
+            font-size: 3.25rem;
+            line-height: 1.15;
+            font-weight: 800;
+            max-width: 900px;
+            margin: 0 auto 20px;
+            letter-spacing: -1px;
+        }
+
+        .hero h1 span {
+            color: var(--lime);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 720px;
+            margin: 0 auto 36px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 56px;
+        }
+
+        .section-header h2 {
+            font-size: 2.25rem;
+            margin-bottom: 12px;
+            font-weight: 800;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .features {
+            padding: 80px 0;
+            background-color: var(--bg-forest);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 28px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 32px;
+            border-radius: 12px;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            background-color: var(--bg-card-hover);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            background-color: rgba(46, 229, 117, 0.1);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: var(--lime);
+        }
+
+        .card h3 {
+            font-size: 1.35rem;
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .pricing {
+            padding: 90px 0;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            align-items: stretch;
+        }
+
+        .pricing-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 36px 28px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .pricing-card.featured {
+            border: 2px solid var(--lime);
+            background: #153c2c;
+            transform: scale(1.03);
+            box-shadow: 0 8px 30px rgba(46, 229, 117, 0.15);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--lime);
+            color: #071510;
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .pricing-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+        }
+
+        .pricing-card .desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+            min-height: 44px;
+        }
+
+        .price-box {
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .monthly-price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--lime);
+        }
+
+        .monthly-price span {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .setup-fee {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .features-list {
+            list-style: none;
+            margin-bottom: 32px;
+            flex-grow: 1;
+        }
+
+        .features-list li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.92rem;
+            color: var(--text-main);
+        }
+
+        .features-list li svg {
+            color: var(--lime);
+            min-width: 16px;
+        }
+
+        .cta-box {
+            background: radial-gradient(circle at 50% 50%, #153c2c 0%, var(--bg-card) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 60px 30px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .cta-box h2 {
+            font-size: 2.2rem;
+            margin-bottom: 14px;
+        }
+
+        .cta-box p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.3rem; }
+            .hero p { font-size: 1.05rem; }
+            .pricing-card.featured { transform: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <nav>
+        <div class="container nav-inner">
+            <a href="#" class="logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 10L85 25V55C85 75 50 90 50 90C50 90 15 75 15 55V25L50 10Z" stroke="#2ee575" stroke-width="7" fill="#0d261c"/>
+                    <path d="M30 60L46 44L56 54L72 32M72 32H60M72 32V44" stroke="#2ee575" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                YIELD
+            </a>
+            <a href="https://forms.gle/Sx7UgMbYcunXqkLD7" class="btn btn-sm">Get Your Audit</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="container">
+            <div class="badge">Revenue Operations for Your Business</div>
+            <h1>Stop Losing Your Local Customers to Competitors. 
+            <h1><span>Fix What Costs You.</span></h1>
+            <p>You work hard in the field, but if your phone isn't ringing, your digital presence is letting you down. We build automated lead capture, reputation management, and local search infrastructure so you never miss another job.</p>
+            <a href="https://forms.gle/Sx7UgMbYcunXqkLD7" class="btn">Get Your Free Audit</a>
+        </div>
+    </header>
+
+    <!-- Core Pillars -->
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>How Yield Protects and Grows Your Revenue</h2>
+                <p>We plug the operational holes that are silently draining thousands of dollars from your business every month.</p>
+            </div>
+            
+            <div class="grid">
+                <div class="card">
+                    <div class="card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    </div>
+                    <h3>Automated Review Velocity</h3>
+                    <p>We set up your systems to automatically request reviews via SMS the moment you finish a job. You build steady local trust and dominate Google's Map Pack without chasing clients manually.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+                    </div>
+                    <h3>Missed-Call Recovery</h3>
+                    <p>When you are under a sink or on a roof, you can't answer your phone. Our automated AI text-back intercepts your missed calls instantly, locking in the customer before they call someone else.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    </div>
+                    <h3>Local Map Pack Dominance</h3>
+                    <p>We optimize your Google Business Profile with exact category alignment, verified service boundaries, and weekly content updates that show search engines you are active and open for business.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Predictable Setup, Minimal Monthly Retainers</h2>
+                <p>We front-load the heavy lifting to build your digital infrastructure, keeping your ongoing monthly costs low.</p>
+            </div>
+
+            <div class="pricing-grid">
+                <!-- Tier 1 -->
+                <div class="pricing-card">
+                    <h3>The Foundation</h3>
+                    <p class="desc">For your business if you need a clean, compliant digital baseline set up correctly.</p>
+                    <div class="price-box">
+                        <div class="monthly-price">$250<span>/mo</span></div>
+                        <div class="setup-fee">$750 one-time initial audit & setup</div>
+                    </div>
+                    <ul class="features-list">
+                        <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Exact Primary Category Alignment</li>
+                        <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Complete 700+ Char GBP Overhaul</li>
+                        <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Service Area Boundary Protection</li>
+                        <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Manual Review Outreach Templates</li>
+                    </ul>
+                    <a href="https://forms.gle/Sx7UgMbYcunXqkLD7" class="btn" style="background:#184232; color:var(--text-main); border:1px solid var(--border-color);">Get Started</a>
+                </div>
+
+                <!-- Tier 2 -->
+                <div class="pricing-card featured">
+                    <div class="popular-badge">Most Popular</div>
+                    <h3>The Growth Engine</h3>
+                    <p class="desc">For your business if you want to scale your reviews and outrank local competitors.</p>
+                    <div class="price-box">
+                        <div class="monthly-price">$500<span>/mo</span></div>
+                        <div class="setup-fee">$1,500 one-time initial audit & setup</div>
+                    </div>
+                    <ul class="features-list">
+                        <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> <strong>Everything in Foundation</strong></li>
+                        <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Automated SMS/Email Review Drip</li>
+                        <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Weekly GBP Posts & Photo Updates</li>
+                        <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> AI Review Responder (Human Approval)</li>
+                    </ul>
+                    <a href="https://forms.gle/Sx7UgMbYcunXqkLD7" class="btn">Launch Growth Engine</a>
+                </div>
+
+                <!-- Tier 3 -->
+                <div class="pricing-card">
+                    <h3>Market Dominator</h3>
+                    <p class="desc">Full RevOps automation for your business to capture maximum local market share.</p>
+                    <div class="price-box">
+                        <div class="monthly-price">$750<span>/mo</span></div>
+                        <div class="setup-fee">$2,500 one-time initial audit & setup</div>
+                    </div>
+                    <ul class="features-list">
+                        <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> <strong>Everything in Growth Engine</strong></li>
+                        <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> AI Missed-Call Instant Text-Back</li>
+                        <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Multi-City Programmatic Landing Pages</li>
+                        <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> LocalBusiness JSON-LD Schema Build</li>
+                    </ul>
+                    <a href="https://forms.gle/Sx7UgMbYcunXqkLD7" class="btn" style="background:#184232; color:var(--text-main); border:1px solid var(--border-color);">Dominate Your Area</a>
+                </div>
+            </div>
+
+            <!-- Bottom CTA -->
+            <div class="cta-box" id="audit">
+                <h2>Let Us Help You</h2>
+                <p>We will review your current online setup and show you precisely what is holding your business back from capturing more local clients.</p>
+                <a href="https://forms.gle/7GHhaEA2Byx2AHP26" class="btn">Get Your Free Audit</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Yield. Automated Revenue Operations for Your Trade Business. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
